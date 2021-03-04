@@ -2,6 +2,9 @@ body {
     font-family: 'Roboto', sans-serif;
     text-align: center;
     background-color: rgb(250,250,250);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #link-block {
@@ -33,6 +36,22 @@ p{
     font-size: 25px;
     font-weight: normal;
     padding: 5px;
+}
+
+.input-block{
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid black;
+    width: 600px;
+    font-weight: 400;
+}
+
+.input-block label, input, button{
+    padding: 5px;
+}
+input {
+    width: 250px;
+    text-align: center;
 }
 
 a{
