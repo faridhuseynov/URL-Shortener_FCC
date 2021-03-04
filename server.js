@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const dns = require("dns");
+const url = require("url");
+const { parse } = require("path");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,26 +20,32 @@ app.get("/",(req,res)=>{
     res.sendFile(__dirname+"/views/index.html");
 })
 
+// regex to remove the https, http, www
+// url = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
+
 app.get("/api/shortulr/:short",(req,res)=>{
     var link = req.params;
     console.log(link);
 })
 
 app.post('/api/shorturl/new',(req,res)=>{
-    const url= req.body.website;
-        dns.lookup(String(url),(err,addresses,family)=>{
+    const submittedUrl=JSON.stringify(req.body.website);
+    const hostname = (url.parse(submittedUrl)).hostname;
+    console.log(submittedUrl);
+    console.log(hostname);
+        dns.lookup(hostname,(err,addresses,family)=>{
         console.log(err);
         if(err){
             res.json({"error":"Invalid Hostname"});
         }else{
             for(const [key,value]of Object.entries(websites)){
-                if(value==String(url)){
-                    return res.json({"original_url":url,"short_url":key});
+                if(value==hostname){
+                    return res.json({"original_url":hostname,"short_url":key});
                 }
             }
             var next = Object.keys(websites).length+1;
-            websites[next]=url;
-            res.json({"original_url":url,"short_url":next});
+            websites[next]=hostname;
+            res.json({"original_url":hostname,"short_url":next});
         }
     })
 })
