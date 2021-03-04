@@ -1,0 +1,25 @@
+{
+  "name": "url-shortener_fcc",
+  "version": "1.0.0",
+  "description": "FCC API & Microservices Certificate Project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faridhuseynov/URL-Shortener_FCC.git"
+  },
+  "author": "Farid Huseynov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/faridhuseynov/URL-Shortener_FCC/issues"
+  },
+  "homepage": "https://github.com/faridhuseynov/URL-Shortener_FCC#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
