@@ -1,11 +1,16 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 const cors = require("cors");
 const dns = require("dns");
 const url = require("url");
 
 const app = express();
 const port = process.env.PORT || 3000;
+const username = process.env.USERNAME;
+const password = process.env.PASSWORD;
+console.log(password);
+const uri = 'mongodb+srv://<username>:<password>@freecodecamp.hyhy6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 var websites={"1":"https://www.facebook.com"};
 app.use(cors({optionsSuccessStatus:200}));
 
@@ -19,12 +24,14 @@ app.get("/",(req,res)=>{
     res.sendFile(__dirname+"/views/index.html");
 })
 
-// regex to remove the https, http, www
-// url = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
-
-app.get("/api/shortulr/:short",(req,res)=>{
-    var link = req.params;
-    console.log(link);
+app.get("/api/shorturl/:short",(req,res)=>{
+    var link = req.params.short;
+    var url = websites[link];
+    if(url==undefined){
+     res.json({"error":"No short URL found for the given input"});
+    }else{
+        res.redirect(url);
+    }
 })
 
 app.post('/api/shorturl/new',(req,res)=>{
