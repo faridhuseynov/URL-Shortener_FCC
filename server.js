@@ -3,7 +3,6 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const dns = require("dns");
 const url = require("url");
-const { parse } = require("path");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -29,23 +28,25 @@ app.get("/api/shortulr/:short",(req,res)=>{
 })
 
 app.post('/api/shorturl/new',(req,res)=>{
-    const submittedUrl=JSON.stringify(req.body.website);
-    const hostname = (url.parse(submittedUrl)).hostname;
-    console.log(submittedUrl);
-    console.log(hostname);
-        dns.lookup(hostname,(err,addresses,family)=>{
+    const submittedUrl=(req.body.website);
+    const check = submittedUrl.match(/^https:\/\/www\./g)?true:(submittedUrl.match(/^http:\/\/www\./g)?true:false);
+    if(!check){
+       return res.json({"error":"Invalid Hostname"});
+    }
+    const url = (submittedUrl.split("//"))[1];
+        dns.lookup(url,(err,addresses,family)=>{
         console.log(err);
         if(err){
             res.json({"error":"Invalid Hostname"});
         }else{
-            for(const [key,value]of Object.entries(websites)){
-                if(value==hostname){
-                    return res.json({"original_url":hostname,"short_url":key});
+            for(const [key,value] of Object.entries(websites)){
+                if(value==submittedUrl){
+                    return res.json({"original_url":submittedUrl,"short_url":key});
                 }
             }
             var next = Object.keys(websites).length+1;
-            websites[next]=hostname;
-            res.json({"original_url":hostname,"short_url":next});
+            websites[next]=submittedUrl;
+            res.json({"original_url":submittedUrl,"short_url":next});
         }
     })
 })
