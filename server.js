@@ -1,17 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const dns = require("dns");
-const url = require("url");
 
 const app = express();
 const port = process.env.PORT || 3000;
-const username = process.env.USERNAME;
-const password = process.env.PASSWORD;
-console.log(password);
-const uri = 'mongodb+srv://<username>:<password>@freecodecamp.hyhy6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
 var websites={"1":"https://www.facebook.com"};
+
 app.use(cors({optionsSuccessStatus:200}));
 
 app.use("/public",express.static(__dirname+"/public"));
@@ -42,7 +37,6 @@ app.post('/api/shorturl/new',(req,res)=>{
     }
     const url = (submittedUrl.split("//"))[1];
         dns.lookup(url,(err,addresses,family)=>{
-        console.log(err);
         if(err){
             res.json({"error":"Invalid Hostname"});
         }else{
