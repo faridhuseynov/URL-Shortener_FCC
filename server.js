@@ -10,10 +10,8 @@ var websites={"1":"https://www.facebook.com"};
 app.use(cors({optionsSuccessStatus:200}));
 
 app.use("/public",express.static(__dirname+"/public"));
-app.use(bodyParser.urlencoded({extended:true}));
 
-// var w3 = dns.lookup('www.w3schools.com', function (err, addresses, family) {
-    //     console.log(addresses);
+app.use(bodyParser.urlencoded({extended:true}));
 
 app.get("/",(req,res)=>{
     res.sendFile(__dirname+"/views/index.html");
@@ -30,15 +28,15 @@ app.get("/api/shorturl/:short",(req,res)=>{
 })
 
 app.post('/api/shorturl/new',(req,res)=>{
-    const submittedUrl=(req.body.website);
+    const submittedUrl=req.body.website;
     const check = submittedUrl.match(/^https:\/\/www\./g)?true:(submittedUrl.match(/^http:\/\/www\./g)?true:false);
     if(!check){
-       return res.json({"error":"Invalid Hostname"});
+       return res.json({"error":"invalid url"});
     }
     const url = (submittedUrl.split("//"))[1];
         dns.lookup(url,(err,addresses,family)=>{
         if(err){
-            res.json({"error":"Invalid Hostname"});
+            res.json({"error":"invalid url"});
         }else{
             for(const [key,value] of Object.entries(websites)){
                 if(value==submittedUrl){
